@@ -250,8 +250,8 @@
                                           ],
                                           "properties": {
                                                          "state": "Enabled",
-														 "isAzureMonitorTargetEnabled": true,
-														"workspaceId": "[parameters('workspaceId')]"
+							 "isAzureMonitorTargetEnabled": true,
+							"workspaceId": "[parameters('workspaceId')]"
 
 
                                           }
