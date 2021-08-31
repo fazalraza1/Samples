@@ -1,0 +1,262 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.1",
+	"parameters": {
+		"workspaceName": {
+			"type": "String"
+		},
+		"location": {
+			"type": "String",
+			"defaultValue": "[resourceGroup().location]"
+		},
+		"defaultDataLakeStorageAccountName": {
+			"type": "String"
+		},
+		"defaultDataLakeStorageFilesystemName": {
+			"type": "String"
+		},
+		"sqlAdministratorLogin": {
+			"type": "String"
+		},
+		"sqlAdministratorLoginPassword": {
+			"defaultValue": "",
+			"type": "SecureString"
+		},
+		"allowAllConnections": {
+			"defaultValue": true,
+			"type": "Bool"
+		},
+		"allowAzureServices": {
+			"defaultValue": true,
+			"type": "Bool"
+		},
+		"grantWorkspaceIdentityControlForSql": {
+			"allowedValues": [
+				"Enabled",
+				"Disabled"
+			],
+			"type": "String"
+		},
+		"managedVirtualNetwork": {
+			"allowedValues": [
+				"default",
+				""
+			],
+			"type": "String"
+		},
+		"setSbdcRbacOnStorageAccount": {
+			"defaultValue": false,
+			"type": "Bool"
+		},
+		"enableDiagnosticSetting": {
+			"type": "bool",
+			"metadata": {
+				"description": "Enable or disable diagnostic settings"
+			},
+			"defaultValue": true
+		},
+		"workspaceId": {
+			"type": "String",
+			"metadata": {
+				"description": "Log Analytics workspace ID where diagnostic logs will be pushed."
+			}
+		}
+	},
+	"variables": {
+		"StorageBlobDataContributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+		"defaultDataLakeStorageAccountUrl": "[concat('https://', parameters('defaultDataLakeStorageAccountName'), '.dfs.core.windows.net')]",
+		"storageResourceGroupName": "[resourceGroup().name]",
+		"storageSubscriptionID": "[subscription().subscriptionId]"
+	},
+	"resources": [
+		{
+			"type": "Microsoft.Synapse/workspaces",
+			"apiVersion": "2019-06-01-preview",
+			"name": "[parameters('workspaceName')]",
+			"location": "[parameters('location')]",
+			"dependsOn": [],
+			"identity": {
+				"type": "SystemAssigned"
+			},
+			"properties": {
+				"defaultDataLakeStorage": {
+					"accountUrl": "[variables('defaultDataLakeStorageAccountUrl')]",
+					"filesystem": "[parameters('defaultDataLakeStorageFilesystemName')]"
+				},
+				"sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
+				"sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+				"managedVirtualNetwork": "[parameters('managedVirtualNetwork')]"
+			},
+			"resources": [
+				{
+					"type": "firewallrules",
+					"apiVersion": "2019-06-01-preview",
+					"name": "allowAll",
+					"location": "[parameters('location')]",
+					"dependsOn": [
+						"[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+					],
+					"properties": {
+						"startIpAddress": "0.0.0.0",
+						"endIpAddress": "255.255.255.255"
+					},
+					"condition": "[parameters('allowAllConnections')]"
+				},
+				{
+					"type": "firewallrules",
+					"apiVersion": "2019-06-01-preview",
+					"name": "AllowAllWindowsAzureIps",
+					"location": "[parameters('location')]",
+					"dependsOn": [
+						"[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+					],
+					"properties": {
+						"startIpAddress": "0.0.0.0",
+						"endIpAddress": "0.0.0.0"
+					},
+					"condition": "[parameters('allowAzureServices')]"
+				},
+				{
+					"type": "managedIdentitySqlControlSettings",
+					"apiVersion": "2019-06-01-preview",
+					"name": "default",
+					"location": "[parameters('location')]",
+					"dependsOn": [
+						"[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+					],
+					"properties": {
+						"grantSqlControlToManagedIdentity": {
+							"desiredState": "[parameters('grantWorkspaceIdentityControlForSql')]"
+						}
+					}
+				}
+			]
+		},
+		{
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2019-05-01",
+			"name": "storageRoleDeploymentResource",
+			"dependsOn": [
+				"[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+			],
+			"properties": {
+				"mode": "Incremental",
+				"template": {
+					"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+					"contentVersion": "1.0.0.0",
+					"parameters": {},
+					"variables": {},
+					"resources": [
+						{
+							"type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
+							"apiVersion": "2018-09-01-preview",
+							"name": "[concat(parameters('defaultDataLakeStorageAccountName'), '/Microsoft.Authorization/', guid(resourceGroup().id, parameters('defaultDataLakeStorageAccountName'), parameters('workspaceName'), 'StorageBlobDataContributor'))]",
+							"location": "[parameters('location')]",
+							"properties": {
+								"roleDefinitionId": "[variables('StorageBlobDataContributor')]",
+								"principalId": "[reference(concat('Microsoft.Synapse/workspaces/', parameters('workspaceName')), '2019-06-01-preview', 'Full').identity.principalId]",
+								"principalType": "ServicePrincipal"
+							}
+						}
+					]
+				}
+			},
+			"subscriptionId": "[variables('storageSubscriptionID')]",
+			"resourceGroup": "[variables('storageResourceGroupName')]",
+			"condition": "[parameters('setSbdcRbacOnStorageAccount')]"
+		},
+		{
+			"condition": "[parameters('enableDiagnosticSetting')]",
+			"apiVersion": "2017-05-01-preview",
+			"type": "Microsoft.Synapse/workspaces/providers/diagnosticSettings",
+			"name": "[concat(parameters('workspaceName'), '/microsoft.insights/', 'ds-', parameters('workspaceName'))]",
+			"dependsOn": [
+				"[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+			],
+			"properties": {
+				"workspaceId": "[parameters('workspaceId')]",
+				"logs": [
+					{
+						"category": "SynapseRbacOperations",
+						"enabled": true,
+						"retentionPolicy": {
+							"days": 30,
+							"enabled": true
+						}
+					},
+					{
+						"category": "GatewayApiRequests",
+						"enabled": true,
+						"retentionPolicy": {
+							"days": 30,
+							"enabled": true
+						}
+					},
+					{
+						"category": "SQLSecurityAuditEvents",
+						"enabled": true,
+						"retentionPolicy": {
+							"days": 30,
+							"enabled": true
+						}
+					},
+					{
+						"category": "BuiltinSqlReqsEnded",
+						"enabled": true,
+						"retentionPolicy": {
+							"days": 30,
+							"enabled": true
+						}
+					},
+					{
+						"category": "IntegrationPipelineRuns",
+						"enabled": true,
+						"retentionPolicy": {
+							"days": 30,
+							"enabled": true
+						}
+					},
+					{
+						"category": "IntegrationActivityRuns",
+						"enabled": true,
+						"retentionPolicy": {
+							"days": 30,
+							"enabled": true
+						}
+					},
+					{
+						"category": "IntegrationTriggerRuns",
+						"enabled": true,
+						"retentionPolicy": {
+							"days": 30,
+							"enabled": true
+						}
+					}
+				],
+				"metrics": [
+					{
+						"category": "AllMetrics",
+						"enabled": true
+					}
+				]
+			}
+		},
+		                            {
+                                          "type": "Microsoft.Synapse/workspaces/auditingSettings",
+                                          "apiVersion": "2019-06-01-preview",
+                                          "name": "[concat(parameters('workspaceName'), '/DefaultAuditingSettings')]",
+                                          "dependsOn": [
+                                                         "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+                                          ],
+                                          "properties": {
+                                                         "state": "Enabled",
+														 "isAzureMonitorTargetEnabled": true,
+														"workspaceId": "[parameters('workspaceId')]"
+
+
+                                          }
+                            }
+
+	],
+	"outputs": {}
+}
