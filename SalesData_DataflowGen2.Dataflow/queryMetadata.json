@@ -1,0 +1,27 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {},
+  "name": "SalesData_DataflowGen2",
+  "queryGroups": [],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "orders": {
+      "queryId": "cb1aabac-7fcd-4da4-833c-2b4e46bc6409",
+      "queryName": "orders",
+      "loadEnabled": false
+    },
+    "orders_DataDestination": {
+      "queryId": "46c95282-bcf9-45cd-b704-1376a1fd9b65",
+      "queryName": "orders_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"885b0f6e-0350-49b5-aad2-dcf50d43c97d\",\"DatasourceId\":\"fa988fe8-2296-4879-8457-7aeabbc4de70\"}"
+    }
+  ]
+}

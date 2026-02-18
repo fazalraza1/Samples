@@ -43,7 +43,7 @@
               "fileExtension": ".txt"
             },
             "storeSettings": {
-              "type": "LakehouseWriteSettings"
+              "type": "AzureBlobStorageWriteSettings"
             },
             "datasetSettings": {
               "type": "DelimitedText",

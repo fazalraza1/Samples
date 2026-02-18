@@ -1,0 +1,20 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {},
+  "name": "Demo_Dataflow",
+  "queryGroups": [],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "orders": {
+      "queryId": "5c6d76c7-3286-4b46-9c29-8797a47804ba",
+      "queryName": "orders"
+    }
+  },
+  "connections": [
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"885b0f6e-0350-49b5-aad2-dcf50d43c97d\",\"DatasourceId\":\"fa988fe8-2296-4879-8457-7aeabbc4de70\"}"
+    }
+  ]
+}
