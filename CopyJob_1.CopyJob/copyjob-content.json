@@ -1,0 +1,323 @@
+{
+  "properties": {
+    "jobMode": "Batch",
+    "source": {
+      "type": "Parquet",
+      "connectionSettings": {
+        "type": "AzureBlobStorage",
+        "typeProperties": {
+          "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc"
+        }
+      }
+    },
+    "destination": {
+      "type": "LakehouseTable",
+      "connectionSettings": {
+        "type": "Lakehouse",
+        "typeProperties": {
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "artifactId": "53887ab8-4ab2-be1c-409d-c5825c51fca0",
+          "rootFolder": "Tables"
+        }
+      }
+    },
+    "policy": {
+      "timeout": "0.12:00:00"
+    }
+  },
+  "activities": [
+    {
+      "id": "fb72131e-09b9-4a93-9252-b6b6914029c9",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "location": {
+              "type": "AzureBlobStorageLocation",
+              "container": "nyctlc"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {
+            "recursive": false,
+            "wildcardFolderPath": "green/puYear=*/puMonth=*",
+            "wildcardFileName": "*.parquet",
+            "enablePartitionDiscovery": false
+          }
+        },
+        "destination": {
+          "writeBehavior": "Append",
+          "datasetSettings": {
+            "schema": "",
+            "table": "Bronze"
+          },
+          "applyVOrder": false
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "vendorID",
+                "type": "Int32",
+                "physicalType": "INT32"
+              },
+              "destination": {
+                "name": "vendorID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "lpepPickupDatetime",
+                "type": "DateTime",
+                "physicalType": "INT96"
+              },
+              "destination": {
+                "name": "lpepPickupDatetime",
+                "physicalType": "timestamp"
+              }
+            },
+            {
+              "source": {
+                "name": "lpepDropoffDatetime",
+                "type": "DateTime",
+                "physicalType": "INT96"
+              },
+              "destination": {
+                "name": "lpepDropoffDatetime",
+                "physicalType": "timestamp"
+              }
+            },
+            {
+              "source": {
+                "name": "passengerCount",
+                "type": "Int32",
+                "physicalType": "INT32"
+              },
+              "destination": {
+                "name": "passengerCount",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "tripDistance",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "tripDistance",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "puLocationId",
+                "type": "String",
+                "physicalType": "STRING"
+              },
+              "destination": {
+                "name": "puLocationId",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "doLocationId",
+                "type": "String",
+                "physicalType": "STRING"
+              },
+              "destination": {
+                "name": "doLocationId",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "pickupLongitude",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "pickupLongitude",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "pickupLatitude",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "pickupLatitude",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "dropoffLongitude",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "dropoffLongitude",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "dropoffLatitude",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "dropoffLatitude",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "rateCodeID",
+                "type": "Int32",
+                "physicalType": "INT32"
+              },
+              "destination": {
+                "name": "rateCodeID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "storeAndFwdFlag",
+                "type": "String",
+                "physicalType": "STRING"
+              },
+              "destination": {
+                "name": "storeAndFwdFlag",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "paymentType",
+                "type": "Int32",
+                "physicalType": "INT32"
+              },
+              "destination": {
+                "name": "paymentType",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "fareAmount",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "fareAmount",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "extra",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "extra",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "mtaTax",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "mtaTax",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "improvementSurcharge",
+                "type": "String",
+                "physicalType": "STRING"
+              },
+              "destination": {
+                "name": "improvementSurcharge",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "tipAmount",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "tipAmount",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "tollsAmount",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "tollsAmount",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "ehailFee",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "ehailFee",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "totalAmount",
+                "type": "Double",
+                "physicalType": "DOUBLE"
+              },
+              "destination": {
+                "name": "totalAmount",
+                "physicalType": "double"
+              }
+            },
+            {
+              "source": {
+                "name": "tripType",
+                "type": "Int32",
+                "physicalType": "INT32"
+              },
+              "destination": {
+                "name": "tripType",
+                "physicalType": "integer"
+              }
+            }
+          ]
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    }
+  ]
+}

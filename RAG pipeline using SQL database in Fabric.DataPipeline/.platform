@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "RAG pipeline using SQL database in Fabric"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "28a04152-87a0-9c07-49c1-0047217f9458"
+  }
+}

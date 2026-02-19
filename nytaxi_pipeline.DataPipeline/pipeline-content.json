@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "InvokeCopyJob",
+        "typeProperties": {
+          "copyJobId": "ee9fd853-f1ed-9078-4a3e-5c9c7f47904f",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "externalReferences": {
+          "connection": "18b5447d-63df-4a60-b23f-553a529ab907"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Copy job_2ed",
+        "dependsOn": []
+      },
+      {
+        "type": "Office365Email",
+        "typeProperties": {
+          "body": "@concat('RunID =  ', pipeline().RunId, ' ; ', 'Files written: ', activity('Copy job_2ed').output.value[0].output.filesWritten, ' ; ','Throughput: ', activity('Copy job_2ed').output.value[0].output.throughput,' ; ','Time to copy: ', activity('Copy job_2ed').output.executionDuration,' ; ','Time in queue: ', activity('Copy job_2ed').output.durationInQueue)",
+          "to": "faraza@microsoft.com",
+          "subject": "Copy Data Pipeline"
+        },
+        "externalReferences": {
+          "connection": "fe076bc3-102f-49e7-86c9-95124cf35ed9"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Office365Email1",
+        "dependsOn": [
+          {
+            "activity": "Dataflow1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "RefreshDataflow",
+        "typeProperties": {
+          "dataflowId": "324c3f4c-1b73-bb92-4837-4f8f7f651703",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "notifyOption": "NoNotification",
+          "dataflowType": "DataflowFabric"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Dataflow1",
+        "dependsOn": [
+          {
+            "activity": "Copy job_2ed",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
