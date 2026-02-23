@@ -1,0 +1,138 @@
+table SilverTable
+	lineageTag: 11d0c7f6-6d62-47ee-ae22-e154e8fe1ea0
+	sourceLineageTag: [dbo].[SilverTable]
+
+	column SalesOrderNumber
+		dataType: string
+		lineageTag: 63bb4c9c-96d4-4192-bacd-2589277eef97
+		sourceLineageTag: SalesOrderNumber
+		summarizeBy: none
+		sourceColumn: SalesOrderNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesOrderLineNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: bceb2211-8df6-414a-a076-062caf22217b
+		sourceLineageTag: SalesOrderLineNumber
+		summarizeBy: sum
+		sourceColumn: SalesOrderLineNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ababc267-341a-4cdf-afd7-405d4ea0eb35
+		sourceLineageTag: OrderDate
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column Email
+		dataType: string
+		lineageTag: 1cbc625e-f974-427c-ab02-9c57bb5cf7f7
+		sourceLineageTag: Email
+		summarizeBy: none
+		sourceColumn: Email
+
+		annotation SummarizationSetBy = Automatic
+
+	column Item
+		dataType: string
+		lineageTag: 68e7021c-9d56-456b-9e76-a57239996fb7
+		sourceLineageTag: Item
+		summarizeBy: none
+		sourceColumn: Item
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: aeaa54d7-ae99-42fc-8b61-19a79e095f67
+		sourceLineageTag: Quantity
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPrice
+		dataType: double
+		lineageTag: 176c8885-70b6-42cc-8327-726a738751a5
+		sourceLineageTag: UnitPrice
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Tax
+		dataType: double
+		lineageTag: df2b9bce-21b0-4fdf-abbd-d15ddb630a6a
+		sourceLineageTag: Tax
+		summarizeBy: sum
+		sourceColumn: Tax
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column IsFlagged
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f50ca950-5cb9-4d06-b38d-b9a59ec8f45f
+		sourceLineageTag: IsFlagged
+		summarizeBy: none
+		sourceColumn: IsFlagged
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreatedTS
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a31fe631-c317-4466-80fa-319519a7f162
+		sourceLineageTag: CreatedTS
+		summarizeBy: none
+		sourceColumn: CreatedTS
+
+		annotation SummarizationSetBy = Automatic
+
+	column ModifiedTS
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5e39c550-f1d3-4150-bf55-153cc65b0a9b
+		sourceLineageTag: ModifiedTS
+		summarizeBy: none
+		sourceColumn: ModifiedTS
+
+		annotation SummarizationSetBy = Automatic
+
+	column First
+		dataType: string
+		lineageTag: 70d6d9b0-cbb2-446d-8b90-800199a43de7
+		sourceLineageTag: First
+		summarizeBy: none
+		sourceColumn: First
+
+		annotation SummarizationSetBy = Automatic
+
+	column Last
+		dataType: string
+		lineageTag: ce6cde5d-30c6-4c58-a550-c4b0a1581b36
+		sourceLineageTag: Last
+		summarizeBy: none
+		sourceColumn: Last
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SilverTable = entity
+		mode: directLake
+		source
+			entityName: SilverTable
+			schemaName: dbo
+			expressionSource: 'DirectLake - Demo_Lakehouse2'
+

@@ -1,0 +1,27 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {},
+  "name": "Gold-Delete",
+  "queryGroups": [],
+  "documentLocale": "en-US",
+  "queriesMetadata": {
+    "DefaultDestination": {
+      "queryId": "03e0693c-f164-4080-bc51-4727f630cfe1",
+      "queryName": "DefaultDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "SilverTable": {
+      "queryId": "4da8b0c0-2441-4638-815b-eee50432b432",
+      "queryName": "SilverTable",
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "Lakehouse",
+      "kind": "Lakehouse",
+      "connectionId": "{\"ClusterId\":\"885b0f6e-0350-49b5-aad2-dcf50d43c97d\",\"DatasourceId\":\"fa988fe8-2296-4879-8457-7aeabbc4de70\"}"
+    }
+  ]
+}
