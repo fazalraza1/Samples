@@ -11,17 +11,8 @@
 
 # CELL ********************
 
-pip install fabric-cicd
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
+# Welcome to your new notebook
+# Type here in the cell editor to add code!
 %pip install fabric-jumpstart
 
 # METADATA ********************
@@ -35,8 +26,22 @@ pip install fabric-cicd
 
 import fabric_jumpstart as js
 
+#browse available jumpstarts
+#js.list()
+#Browse unlisted Scenarios
+js.list(show_unlisted=True)
 # Install this scenario
-js.install("banking-loan-fraud")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+js.install('analytics-roadshow-lab')
 
 # METADATA ********************
 
