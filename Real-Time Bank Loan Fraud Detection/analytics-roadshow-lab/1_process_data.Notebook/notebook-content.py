@@ -759,11 +759,7 @@ DataFrame.benchmark_native_engine = _benchmark_native_engine
 
 # CELL ********************
 
-from datetime import datetime, timedelta
-bench_ts_str = (datetime.now() - timedelta(minutes=1)).strftime("%Y-%m-%d %H:%M:%S")
-
-df = spark.sql(f"""
-    -- Shipment Exception Analysis
+df = spark.sql("""
     SELECT 
         sse.exception_code,
         i.category,
@@ -776,24 +772,22 @@ df = spark.sql(f"""
         ROUND(SUM(CASE WHEN sse_del.event_timestamp > s.committed_delivery_date 
                   THEN s.late_delivery_penalty_per_day * datediff(sse_del.event_timestamp, s.committed_delivery_date) 
                   ELSE 0 END), 2) as total_penalties
-    FROM silver.shipment_scan_event TIMESTAMP AS OF '{bench_ts_str}' sse
-    INNER JOIN silver.shipment TIMESTAMP AS OF '{bench_ts_str}' s ON sse.shipment_id = s.shipment_id
-    INNER JOIN silver.order TIMESTAMP AS OF '{bench_ts_str}' o ON s.order_id = o.order_id
-    INNER JOIN silver.item TIMESTAMP AS OF '{bench_ts_str}' i ON o.item_id = i.item_id
-    INNER JOIN silver.customer TIMESTAMP AS OF '{bench_ts_str}' c ON s.customer_id = c.customer_id
-    LEFT JOIN silver.shipment_scan_event TIMESTAMP AS OF '{bench_ts_str}' sse_res ON sse.shipment_id = sse_res.shipment_id 
+    FROM silver.shipment_scan_event sse
+    INNER JOIN silver.shipment s ON sse.shipment_id = s.shipment_id
+    INNER JOIN silver.order o ON s.order_id = o.order_id
+    INNER JOIN silver.item i ON o.item_id = i.item_id
+    INNER JOIN silver.customer c ON s.customer_id = c.customer_id
+    LEFT JOIN silver.shipment_scan_event sse_res ON sse.shipment_id = sse_res.shipment_id 
         AND sse_res.related_exception_event_id = sse.event_id
-    LEFT JOIN silver.shipment_scan_event TIMESTAMP AS OF '{bench_ts_str}' sse_del ON s.shipment_id = sse_del.shipment_id 
+    LEFT JOIN silver.shipment_scan_event sse_del ON s.shipment_id = sse_del.shipment_id 
         AND sse_del.event_type = 'Delivered'
     WHERE sse.exception_code IS NOT NULL
       AND sse.exception_code IN ('DAMAGED', 'WEATHER', 'VEHICLE', 'CUSTOMS')
       AND sse.event_timestamp >= date_sub(current_date(), 180)
     GROUP BY sse.exception_code, i.category
     ORDER BY total_penalties DESC, affected_shipments DESC
-    LIMIT 10;
+    LIMIT 10
 """)
-
-display(df)
 
 # METADATA ********************
 

@@ -371,7 +371,8 @@ SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA IN ('dim', 'fact')
 -- The **OPENROWSET** command allows you to directly read data from files stored in OneLake or external Azure storage accounts without prior ingestion into a table. It can be used for data exploration or data ingestion. 
 -- 
 -- Look at the code in the cell below and run it to create a sample data table and ingest the data from Azure storage into the dbo.CopyIntoExample table and view the data in the table.
--- -- > ℹ️ _Note: The next couple of cells are just an example and not part of the end-to-end solution built in this lab._
+-- > ℹ️ _Note: The next couple of cells are just an example and not part of the end-to-end solution built in this lab._
+
 
 -- CELL ********************
 

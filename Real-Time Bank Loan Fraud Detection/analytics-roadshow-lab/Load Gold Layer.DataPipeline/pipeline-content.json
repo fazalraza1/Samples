@@ -1,0 +1,234 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "name": "load_dim_customer",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 5,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[load_dim_customer]",
+          "enforceOneTimeExecution": false
+        },
+        "linkedService": {
+          "name": "SalesAndLogisticsWH",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "f4zufusk2zgelhvref5vdzwzeq-d7rgdb724dsufb646pkz3n2mfa.datawarehouse.fabric.microsoft.com",
+              "artifactId": "11381886-5d11-4297-85ea-e9ad5b036af7",
+              "workspaceId": "8761e21f-e0fa-42e5-87dc-f3d59db74c28"
+            }
+          }
+        }
+      },
+      {
+        "name": "load_dim_address",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 5,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[load_dim_address]"
+        },
+        "linkedService": {
+          "name": "SalesAndLogisticsWH",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "f4zufusk2zgelhvref5vdzwzeq-d7rgdb724dsufb646pkz3n2mfa.datawarehouse.fabric.microsoft.com",
+              "artifactId": "11381886-5d11-4297-85ea-e9ad5b036af7",
+              "workspaceId": "8761e21f-e0fa-42e5-87dc-f3d59db74c28"
+            }
+          }
+        }
+      },
+      {
+        "name": "load_dim_order_source",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 5,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[load_dim_order_source]"
+        },
+        "linkedService": {
+          "name": "SalesAndLogisticsWH",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "f4zufusk2zgelhvref5vdzwzeq-d7rgdb724dsufb646pkz3n2mfa.datawarehouse.fabric.microsoft.com",
+              "artifactId": "11381886-5d11-4297-85ea-e9ad5b036af7",
+              "workspaceId": "8761e21f-e0fa-42e5-87dc-f3d59db74c28"
+            }
+          }
+        }
+      },
+      {
+        "name": "load_dim_facility",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 5,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[load_dim_facility]"
+        },
+        "linkedService": {
+          "name": "SalesAndLogisticsWH",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "f4zufusk2zgelhvref5vdzwzeq-d7rgdb724dsufb646pkz3n2mfa.datawarehouse.fabric.microsoft.com",
+              "artifactId": "11381886-5d11-4297-85ea-e9ad5b036af7",
+              "workspaceId": "8761e21f-e0fa-42e5-87dc-f3d59db74c28"
+            }
+          }
+        }
+      },
+      {
+        "name": "load_fact_order",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "load_dim_customer",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          },
+          {
+            "activity": "load_dim_item",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          },
+          {
+            "activity": "load_dim_address",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          },
+          {
+            "activity": "load_dim_order_source",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          },
+          {
+            "activity": "load_dim_facility",
+            "dependencyConditions": [
+              "Completed"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[load_fact_order]"
+        },
+        "linkedService": {
+          "name": "SalesAndLogisticsWH",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "f4zufusk2zgelhvref5vdzwzeq-d7rgdb724dsufb646pkz3n2mfa.datawarehouse.fabric.microsoft.com",
+              "artifactId": "11381886-5d11-4297-85ea-e9ad5b036af7",
+              "workspaceId": "8761e21f-e0fa-42e5-87dc-f3d59db74c28"
+            }
+          }
+        }
+      },
+      {
+        "name": "load_fact_shipment",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "load_fact_order",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[load_fact_shipment]"
+        },
+        "linkedService": {
+          "name": "SalesAndLogisticsWH",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "f4zufusk2zgelhvref5vdzwzeq-d7rgdb724dsufb646pkz3n2mfa.datawarehouse.fabric.microsoft.com",
+              "artifactId": "11381886-5d11-4297-85ea-e9ad5b036af7",
+              "workspaceId": "8761e21f-e0fa-42e5-87dc-f3d59db74c28"
+            }
+          }
+        }
+      },
+      {
+        "name": "load_dim_item",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 5,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "storedProcedureName": "[dbo].[load_dim_item]"
+        },
+        "linkedService": {
+          "name": "SalesAndLogisticsWH",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "f4zufusk2zgelhvref5vdzwzeq-d7rgdb724dsufb646pkz3n2mfa.datawarehouse.fabric.microsoft.com",
+              "artifactId": "11381886-5d11-4297-85ea-e9ad5b036af7",
+              "workspaceId": "8761e21f-e0fa-42e5-87dc-f3d59db74c28"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
