@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataAgent",
+    "displayName": "Sales Logistics Data Agent"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "50de81ad-0c2a-b096-48b7-d8dbd84e1a85"
+  }
+}

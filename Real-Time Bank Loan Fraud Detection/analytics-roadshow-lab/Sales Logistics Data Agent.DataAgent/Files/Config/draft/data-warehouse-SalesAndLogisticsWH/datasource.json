@@ -1,0 +1,1254 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "5b036af7-e9ad-85ea-4297-5d1111381886",
+  "workspaceId": "00000000-0000-0000-0000-000000000000",
+  "dataSourceInstructions": "## Key information\r\n\r\n**Sales and orders**\r\n\r\n- An order is commonly referred to as \"sales\", a \"sale\", and \"orders\". Always use the *fact.order* table for these inquiries. \r\n- A single order_number can contain one or more order_line_number. \r\n- Aggregate all order_line_number records together to get order_number level information.\r\n- When referring to an order, search and aggregate by the order_number column.\r\n- When asked about sales amount or order amount or money spent use the extended_price field.\r\n\r\n**Items**\r\n\r\n- When asked about items or products, look at *dim.item*.\r\n- Slice by brand, category. \r\n\r\n**Customers**\r\n\r\n- For questions about customers, use their *delivery_state *for analysis instead of the *billing_state*.\r\n\r\n**Shipment**\r\n\r\n- Each shipment will have one record in the *fact.shipment* table. \r\n- When analyzing shipments use the *destination_*address_sk** field in the *fact.shipment* table to join to the *dim.address* table on the address_sk field. \r\n- Do not use the origin_address_sk field unless explicitly told to do so. \r\n\r\n**Combined Order and Shipment analysis**\r\n\r\n- When asked about orders and shipments together, use *order_number* to join *fact.shipment* and *fact.order*.\r\n- A single *order_number* in *fact.order* may have multiple associated shipments in *fact.shipment*.",
+  "displayName": "SalesAndLogisticsWH",
+  "type": "data_warehouse",
+  "userDescription": "The **SalesAndLogisticsWH** data warehouse contains data for orders, shipments, and the details surrounding those actions. It has tables for customer, date, item, order_source, order, and shipment. Use this source for questions about orders, including their line item detail, and customer purchase habits. Also use this source for aggregated shipment information including when shipments left, when they were scheduled to arrive, and when they actually arrived. This data does not contain detail level shipping data for each scan event on a shipment's journey. ",
+  "metadata": {},
+  "elements": [
+    {
+      "id": "95b36431-1193-4cd0-8e94-1c2f04d0b9fa",
+      "is_selected": false,
+      "display_name": "dim",
+      "type": "warehouse_tables.schema",
+      "description": null,
+      "children": [
+        {
+          "id": "dff8bf5e-997e-4751-b29e-5c54347a7c45",
+          "is_selected": true,
+          "display_name": "address",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "7feca726-fca7-430f-a703-913339e4991d",
+              "is_selected": true,
+              "display_name": "address_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "c46fccc9-1741-460e-a85f-a0fdb83cabcf",
+              "is_selected": true,
+              "display_name": "address_line_1",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "8ceee95f-19f2-4a2b-95b9-fa189afea00c",
+              "is_selected": true,
+              "display_name": "address_line_2",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "46a5d229-f3af-44f8-bcde-d3ee14c0ef09",
+              "is_selected": true,
+              "display_name": "city",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "f9b34960-6ee8-4a33-80f9-04700c21de8b",
+              "is_selected": true,
+              "display_name": "state_abbreviation",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "7a11626c-df46-475b-80fd-52130585e2e6",
+              "is_selected": true,
+              "display_name": "zip_code",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "becb928d-b79b-4576-b98e-3858484f4daf",
+              "is_selected": true,
+              "display_name": "country",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "11981325-068f-4ba2-beca-4018a8f61618",
+              "is_selected": true,
+              "display_name": "latitude",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "2e7e4125-ef41-4d25-8948-9eafc2ef8995",
+              "is_selected": true,
+              "display_name": "longitude",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "90f4ee55-6970-453d-ba38-2ba69bbb874f",
+          "is_selected": true,
+          "display_name": "customer",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "e456fa05-b85d-42c8-8ae0-1c0632bda31e",
+              "is_selected": true,
+              "display_name": "customer_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "bfcdb230-4d1a-400a-aa7e-a03576bea340",
+              "is_selected": true,
+              "display_name": "customer_ak",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "8fae8b99-4376-4077-8b7f-9cfe411ebefc",
+              "is_selected": true,
+              "display_name": "customer_name",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "8d5d34d6-6e89-4763-8538-fad5ca24b8cb",
+              "is_selected": true,
+              "display_name": "customer_description",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "1524e60c-aef1-47a4-b5f5-0c301578bf58",
+              "is_selected": true,
+              "display_name": "primary_contact_first_name",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "9c73574e-5927-4f18-9e6c-180ec0252a87",
+              "is_selected": true,
+              "display_name": "primary_contact_last_name",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "9774a41c-01e9-471e-bdae-1ffb708e255a",
+              "is_selected": true,
+              "display_name": "primary_contact_email",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "2ba1270d-c9b4-4e54-bbd2-448d21cd8c3f",
+              "is_selected": true,
+              "display_name": "primary_contact_phone",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ce9e241f-9bb2-4fac-bc3c-353a525a1cfa",
+              "is_selected": true,
+              "display_name": "delivery_city",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "e55deee5-7c14-4aac-9fc5-93ab31cb76ed",
+              "is_selected": true,
+              "display_name": "delivery_country",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "a94993cf-b9fb-4785-99b7-e2e0be2c5baa",
+              "is_selected": true,
+              "display_name": "delivery_latitude",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "fa1c521f-8ad7-45d9-99d6-11ab83719b4e",
+              "is_selected": true,
+              "display_name": "delivery_longitude",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "af3ac17d-6cc8-41ad-8b52-faa994238945",
+              "is_selected": true,
+              "display_name": "delivery_state",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "bf4cc9f1-7d58-463f-9506-0b67d9cc2211",
+              "is_selected": true,
+              "display_name": "delivery_zip_code",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "c496c9f6-5f67-491b-b199-a2f37820cac0",
+              "is_selected": true,
+              "display_name": "billing_city",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "36d848b8-1406-4df8-a9c5-536df3979e50",
+              "is_selected": true,
+              "display_name": "billing_country",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "e7aba3c7-1146-4825-92c2-016736987156",
+              "is_selected": true,
+              "display_name": "billing_state",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "24569fef-0ebc-4f4a-adb4-067855b62495",
+              "is_selected": true,
+              "display_name": "start_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "7c2e95ad-c15f-44c8-a8e7-3ca64caaea95",
+              "is_selected": true,
+              "display_name": "end_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "0999a7d6-25cb-47f7-9b1e-3b7f80176582",
+          "is_selected": true,
+          "display_name": "date",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "48ea82cc-419b-4799-bab1-b7f9c2e35bc3",
+              "is_selected": true,
+              "display_name": "date_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "8252da30-26f2-44a4-8be9-d82d1755337a",
+              "is_selected": true,
+              "display_name": "date",
+              "type": "warehouse_tables.column",
+              "data_type": "date",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "9750e498-9aee-4bf0-a422-7877deb60293",
+              "is_selected": true,
+              "display_name": "day_number",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "da7291e1-fe10-48bc-a44a-0ed71b41e713",
+              "is_selected": true,
+              "display_name": "day_of_week",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "19ffdbaf-716e-4dc0-81cd-f4130f679901",
+              "is_selected": true,
+              "display_name": "month_number",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "6e2f1e65-0fe8-4ef9-9c2e-34dfa73aec7f",
+              "is_selected": true,
+              "display_name": "month_name",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "42459a29-4493-4f64-ad52-b5ca5057a3ba",
+              "is_selected": true,
+              "display_name": "quarter",
+              "type": "warehouse_tables.column",
+              "data_type": "smallint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "a4ab7752-105b-4f53-9ef1-d65780ef4aba",
+              "is_selected": true,
+              "display_name": "year",
+              "type": "warehouse_tables.column",
+              "data_type": "smallint",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "5531371a-4ae2-4975-9f2b-dc3849834046",
+          "is_selected": false,
+          "display_name": "facility",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "205cd9ea-2687-4f7c-8b0f-40d97e82f093",
+              "is_selected": true,
+              "display_name": "facility_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "65fc36d8-ef2b-4821-b98e-df92d66ee78b",
+              "is_selected": true,
+              "display_name": "facility_ak",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "5f416cf2-cb09-4bd8-853e-9520dd10eb56",
+              "is_selected": true,
+              "display_name": "facility_name",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "40540d89-0cd0-4a30-864f-836c772dac33",
+              "is_selected": true,
+              "display_name": "facility_type",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "be1d6594-60e4-48f5-87f7-389b4c0b1f33",
+              "is_selected": true,
+              "display_name": "address",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "13325cb4-6fd0-48c1-96de-9e8c388312b7",
+              "is_selected": true,
+              "display_name": "city",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "84d948b7-4637-4873-9ea7-660845e696c0",
+              "is_selected": true,
+              "display_name": "state_abbreviation",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "22967c48-b407-425f-952b-2ca56b02cbb6",
+              "is_selected": true,
+              "display_name": "zip_code",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "5c4ccf1a-ec66-4a45-8263-4325ef45366e",
+              "is_selected": true,
+              "display_name": "country",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ab68aaaa-106e-4337-9f80-9eba286fe343",
+              "is_selected": true,
+              "display_name": "latitude",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "68d72ff3-3ea9-450b-90d0-3ee278e3be6f",
+              "is_selected": true,
+              "display_name": "longitude",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "72cf8a06-7df2-4a33-8ac1-07942ecab6ef",
+              "is_selected": true,
+              "display_name": "start_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "620f6a80-4bc8-4438-ba28-10379d465b57",
+              "is_selected": true,
+              "display_name": "end_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "10b3b71c-13d3-48a0-badd-cd50498b209c",
+          "is_selected": true,
+          "display_name": "item",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "15763e42-51e9-4c5a-a617-35643a8e65ef",
+              "is_selected": true,
+              "display_name": "item_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "3001ee3d-b911-46c4-a1c6-b1af4a904f01",
+              "is_selected": true,
+              "display_name": "item_ak",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "23c8642d-de09-4bb7-9dfb-432460279f8c",
+              "is_selected": true,
+              "display_name": "sku",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "9e5f05b5-60d5-4337-94fa-eaa52ff4ee46",
+              "is_selected": true,
+              "display_name": "item_description",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "c92bff7f-1394-4e1f-8046-4c897bb959fa",
+              "is_selected": true,
+              "display_name": "brand",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "777e014f-5ae6-4b34-be04-5a0247440101",
+              "is_selected": true,
+              "display_name": "category",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "c4922edf-084a-4934-b011-bc35f71c6aa2",
+              "is_selected": true,
+              "display_name": "subcategory",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "773f788f-9496-4e48-bcf6-8b8bba431ea0",
+              "is_selected": true,
+              "display_name": "material",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "706d50ee-9647-4333-a105-053303319324",
+              "is_selected": true,
+              "display_name": "nominal_size",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "6b79f198-82b2-4a96-bcd3-b7015b93926c",
+              "is_selected": true,
+              "display_name": "end_connection",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "9e7e6d70-3e06-4c82-a5c1-5392f0f9d0ef",
+              "is_selected": true,
+              "display_name": "pressure_class",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "de640840-766c-4462-a403-0a4441eff8c6",
+              "is_selected": true,
+              "display_name": "weight",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "8fd2d9ae-1ba8-420c-9a08-2a36329e075e",
+              "is_selected": true,
+              "display_name": "cost",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "207f200f-6067-4752-95d6-1ee4d9b6630d",
+              "is_selected": true,
+              "display_name": "list_price",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ce84625d-5e15-4eb2-8a2e-f603f140efdf",
+              "is_selected": true,
+              "display_name": "is_sdofcertified",
+              "type": "warehouse_tables.column",
+              "data_type": "bit",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "fc307376-b3ce-49c8-a3a0-09595a558be8",
+              "is_selected": true,
+              "display_name": "structural_index",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "fcac0a82-4f7d-4f36-b3cc-29e0b4719078",
+              "is_selected": true,
+              "display_name": "span_rating",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "7c73acb8-45f1-4fb9-93ea-85d9a2a78dba",
+              "is_selected": true,
+              "display_name": "start_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "0b2ac4ac-abcd-4af6-a45c-7af9c5fae8cb",
+              "is_selected": true,
+              "display_name": "end_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "981af78a-a883-4d3e-9f73-b3e8ad2c8b01",
+          "is_selected": true,
+          "display_name": "order_source",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "a79e83d9-82bf-4671-beab-a78618222de4",
+              "is_selected": true,
+              "display_name": "order_source_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "f9539dda-2c3b-43a8-8794-f41d1e37a94c",
+              "is_selected": true,
+              "display_name": "order_source_ak",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "425283d7-0af9-47ee-9968-d751cf2c6798",
+              "is_selected": true,
+              "display_name": "order_source_name",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "56b99216-99d2-48fc-9f47-bb315d1da050",
+              "is_selected": true,
+              "display_name": "start_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "f9fd3807-8bef-4d05-98e3-860918f0ca3e",
+              "is_selected": true,
+              "display_name": "end_date",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "23039ed9-e1ad-49f2-a594-b938b34e5a1a",
+      "is_selected": false,
+      "display_name": "fact",
+      "type": "warehouse_tables.schema",
+      "description": null,
+      "children": [
+        {
+          "id": "5d93cb99-05f5-4a7d-8db8-4ccfb297aa7e",
+          "is_selected": true,
+          "display_name": "order",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "c302ff50-9941-401f-830f-ff1310ec057c",
+              "is_selected": true,
+              "display_name": "order_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "60ae9258-1498-430c-8254-ced636c1a334",
+              "is_selected": true,
+              "display_name": "order_number",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "10bb892e-5902-4f1b-81c6-1a27089559f2",
+              "is_selected": true,
+              "display_name": "order_line_number",
+              "type": "warehouse_tables.column",
+              "data_type": "smallint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "dcd95ef1-15a1-4d92-9b63-6761c6e8ac22",
+              "is_selected": true,
+              "display_name": "order_date_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "20f027ee-8d68-4002-bfc7-a540617fde45",
+              "is_selected": true,
+              "display_name": "order_source_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "1f095c5b-5ea5-4bf9-928f-aa71e0b1a325",
+              "is_selected": true,
+              "display_name": "customer_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "1d505853-0d43-48fd-8d6b-b0abc2717af5",
+              "is_selected": true,
+              "display_name": "item_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "66159042-536d-421b-8ba6-4e29a1b92741",
+              "is_selected": true,
+              "display_name": "quantity",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ea7323fe-b586-481a-a765-5647c0b8b057",
+              "is_selected": true,
+              "display_name": "unit_price",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "b7a31d51-dbbc-471b-babe-1f3be04c9321",
+              "is_selected": true,
+              "display_name": "extended_price",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "081af590-0b71-40e7-b7da-0453d0917a67",
+              "is_selected": true,
+              "display_name": "net_weight",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "76ff2683-5cbb-40c0-a79b-728bc10fedf7",
+              "is_selected": true,
+              "display_name": "warranty_included",
+              "type": "warehouse_tables.column",
+              "data_type": "bit",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "430d7b6c-1e33-40e7-8bb1-142432fddf23",
+          "is_selected": true,
+          "display_name": "shipment",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "8c8eec72-a3ae-4c1a-a43c-e9ae94818b3a",
+              "is_selected": true,
+              "display_name": "shipment_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "36eefb68-8d05-458e-8e8e-35ea54b74743",
+              "is_selected": true,
+              "display_name": "tracking_number",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "0654865f-947f-40a5-8066-4dc556d536e6",
+              "is_selected": true,
+              "display_name": "order_number",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "99aff289-c536-4ce0-9809-0fd5ad1accc4",
+              "is_selected": true,
+              "display_name": "ship_date_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "06c72f42-6b9e-4053-9e60-dec5c2a821db",
+              "is_selected": true,
+              "display_name": "committed_delivery_date_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "209c7c21-b113-47c3-94bf-3c4b31d731e1",
+              "is_selected": true,
+              "display_name": "delivery_date_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "cf4c934b-87c9-4298-a9b0-5e527c01d759",
+              "is_selected": true,
+              "display_name": "customer_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "7ee503ca-3473-40ed-9394-9dc69024e288",
+              "is_selected": true,
+              "display_name": "origin_address_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "7b7def07-4513-4844-93c0-fcd0d87386e2",
+              "is_selected": true,
+              "display_name": "destination_address_sk",
+              "type": "warehouse_tables.column",
+              "data_type": "bigint",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "96ded27a-5af8-4315-bb06-110e73f16175",
+              "is_selected": true,
+              "display_name": "service_level",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "94861f4e-19e7-4df0-bb30-cfc45f36f8d8",
+              "is_selected": true,
+              "display_name": "delivery_days_late",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "2757f07b-053a-4510-af2a-ca9844e97a7f",
+              "is_selected": true,
+              "display_name": "late_delivery_penalty_per_day",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "098fe5d5-a3c3-4191-ab89-fc5f6d90f3e0",
+              "is_selected": true,
+              "display_name": "late_delivery_penalty",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "a27a31b6-a9a8-4c27-8fa5-6fb810556e75",
+              "is_selected": true,
+              "display_name": "shipment_distance",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "131b001a-1fc4-4b72-9d00-c4a2c77f5632",
+              "is_selected": true,
+              "display_name": "declared_value",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "8893a32b-2863-46be-840f-396f310d5bac",
+              "is_selected": true,
+              "display_name": "height",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "e0710c83-4a9d-4d62-8459-e7514ebb66f9",
+              "is_selected": true,
+              "display_name": "width",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "a9162861-1004-45e5-8c78-382b2121ee5d",
+              "is_selected": true,
+              "display_name": "length",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "d8777bd2-ae20-4245-b706-85820563ca94",
+              "is_selected": true,
+              "display_name": "volume",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "9bf1d3a6-fc7c-4639-9098-2e98da9ea5e8",
+              "is_selected": true,
+              "display_name": "weight",
+              "type": "warehouse_tables.column",
+              "data_type": "float",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "29f6c10d-b2ff-4619-9c74-1e2949ff9da1",
+              "is_selected": true,
+              "display_name": "is_fragile",
+              "type": "warehouse_tables.column",
+              "data_type": "bit",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "9a293f58-7a04-4ae6-9332-5ea338a70612",
+              "is_selected": true,
+              "display_name": "is_hazardous",
+              "type": "warehouse_tables.column",
+              "data_type": "bit",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "c18cd006-5ed7-48c9-95e4-e7f01f06f4eb",
+              "is_selected": true,
+              "display_name": "requires_refrigeration",
+              "type": "warehouse_tables.column",
+              "data_type": "bit",
+              "description": null,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b82d3a07-e997-4e80-a510-ce88a8d3ed91",
+      "is_selected": false,
+      "display_name": "dbo",
+      "type": "warehouse_tables.schema",
+      "description": null,
+      "children": [
+        {
+          "id": "b41b2cc1-c17a-4d63-bb1d-f025404125bb",
+          "is_selected": false,
+          "display_name": "CopyIntoExample",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "711a08aa-2f2e-42cc-8320-d07ed9cbb7cb",
+              "is_selected": true,
+              "display_name": "Date",
+              "type": "warehouse_tables.column",
+              "data_type": "date",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "eb864014-e400-433c-8a75-85c6d8b1a683",
+              "is_selected": true,
+              "display_name": "DayNumber",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "df5fb0ca-0b7d-4f1a-abbc-9ff0e220e7b4",
+              "is_selected": true,
+              "display_name": "Day",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "a353931b-c66a-4455-b91d-50b644151bc0",
+              "is_selected": true,
+              "display_name": "Month",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "3d916ab4-4b21-4a41-825f-b9bab8fedf57",
+              "is_selected": true,
+              "display_name": "ShortMonth",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "4a9137e9-8ab3-4647-a641-1870a301b5ac",
+              "is_selected": true,
+              "display_name": "CalendarMonthNumber",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "cea2de06-017f-4b73-8b71-9c6546164ff2",
+              "is_selected": true,
+              "display_name": "CalendarMonthLabel",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "79e91f69-f314-459f-aedc-ee11ffe2fea1",
+              "is_selected": true,
+              "display_name": "CalendarYear",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ae4e782c-b83d-4d1d-990e-e34c74ed51b1",
+              "is_selected": true,
+              "display_name": "CalendarYearLabel",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "abb3925a-50a9-475a-afdc-176fdae7a087",
+              "is_selected": true,
+              "display_name": "FiscalMonthNumber",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "06f9e0da-08cf-477e-a3d8-27f4fe2c8ecb",
+              "is_selected": true,
+              "display_name": "FiscalMonthLabel",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "63ef0751-607d-4679-b58d-9f618ce2568a",
+              "is_selected": true,
+              "display_name": "FiscalYear",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "e505654d-cac3-4478-94f3-2bd1028051b3",
+              "is_selected": true,
+              "display_name": "FiscalYearLabel",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "fc5b0b4d-5526-44e9-acdc-b3becccf0a80",
+              "is_selected": true,
+              "display_name": "ISOWeekNumber",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "651db55a-7f78-445b-9a9f-c9efd6e4e375",
+          "is_selected": false,
+          "display_name": "etl_tracking",
+          "type": "warehouse_tables.table",
+          "description": null,
+          "children": [
+            {
+              "id": "1ede79ae-db0c-459d-b1db-f9c32413c118",
+              "is_selected": true,
+              "display_name": "etl_tracking_id",
+              "type": "warehouse_tables.column",
+              "data_type": "int",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "97e70d92-7eae-461c-9448-2e0bb225ec88",
+              "is_selected": true,
+              "display_name": "table_name",
+              "type": "warehouse_tables.column",
+              "data_type": "varchar",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "281483fa-70b6-40d1-9703-b0b501830349",
+              "is_selected": true,
+              "display_name": "last_load_datetime",
+              "type": "warehouse_tables.column",
+              "data_type": "datetime2",
+              "description": null,
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

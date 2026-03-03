@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/fewShots/1.0.0/schema.json",
+  "fewShots": [
+    {
+      "id": "ca63fe2c-f158-4a24-93a3-ed2e7da55b8b",
+      "question": "What are the top 10 category and subcategories with the longest average delivery days late?",
+      "query": "-- Enter a SQL query that could answer the question using your data\r\nSELECT TOP 5\r\n    a.state_abbreviation,\r\n    COUNT_BIG(*) AS late_shipment_count,\r\n    SUM(late_delivery_penalty) AS total_late_delivery_penalty\r\nFROM fact.shipment AS s\r\nINNER JOIN dim.address a\r\n    ON s.destination_address_sk = a.address_sk\r\nWHERE\r\n    s.delivery_days_late > 0\r\nGROUP BY\r\n    a.state_abbreviation\r\nORDER BY total_late_delivery_penalty DESC"
+    },
+    {
+      "id": "4db6b875-7879-42e3-a9cf-4525b7686fcd",
+      "question": "What are the top 10 category and subcategories with the longest average delivery days late? [2]",
+      "query": "-- Enter a SQL query that could answer the question using your data\r\nSELECT TOP 10\r\n    i.category,\r\n    i.subcategory,\r\n    CONVERT(DECIMAL(10,3), AVG(s.delivery_days_late * 1.0)) AS average_delivery_days_late,\r\n    COUNT(DISTINCT shipment_sk) AS late_delivery_count,\r\n    MAX(s.delivery_days_late) AS max_delivery_days_late\r\nFROM fact.[order] AS o\r\nINNER JOIN dim.item AS i\r\n    ON o.item_sk = i.item_sk\r\nLEFT JOIN fact.shipment AS s\r\n    ON o.order_number = s.order_number\r\nWHERE\r\n    s.delivery_days_late > 0\r\nGROUP BY\r\n    i.category,\r\n    i.subcategory\r\nORDER BY average_delivery_days_late DESC"
+    }
+  ]
+}
