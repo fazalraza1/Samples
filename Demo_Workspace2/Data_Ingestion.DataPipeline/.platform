@@ -2,7 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
     "type": "DataPipeline",
-    "displayName": "Data_Ingestion"
+    "displayName": "Data_Ingestion",
+    "description": "This pipeline copies sales data, processes and transforms it through several steps, and then sends an email notification when key steps are complete."
   },
   "config": {
     "version": "2.0",
