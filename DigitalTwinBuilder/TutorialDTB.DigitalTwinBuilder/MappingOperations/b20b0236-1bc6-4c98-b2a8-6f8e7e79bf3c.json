@@ -1,0 +1,32 @@
+{
+  "operationId": "b20b0236-1bc6-4c98-b2a8-6f8e7e79bf3c",
+  "displayName": "Bus_bus_data_processed",
+  "operationType": "Mapping",
+  "entityTypeId": "71847788410341",
+  "mappingOperationProperties": {
+    "MappingType": "NonTimeSeries",
+    "MappedProperties": [
+      {
+        "SourceColumn": "TripId",
+        "EntityTypePropertyName": "TripId_static"
+      },
+      {
+        "SourceColumn": "StopCode",
+        "EntityTypePropertyName": "StopCode_static"
+      }
+    ],
+    "ProcessingType": "Iterative",
+    "EntityInstanceIdSchema": [
+      "TripId"
+    ],
+    "TimeseriesEntityLinkProperties": null
+  },
+  "sourceTableProperties": {
+    "SourceType": "LakehouseTables",
+    "WorkspaceId": "00000000-0000-0000-0000-000000000000",
+    "ItemId": "d3ec503b-861b-ad2a-4b4b-004b31446b0e",
+    "SourceTableName": "bus_data_processed",
+    "SourceSchema": "dbo"
+  },
+  "filters": null
+}

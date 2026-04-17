@@ -1,0 +1,60 @@
+{
+  "operationId": "ed76d30a-b76b-4758-a3b4-7e983705fc90",
+  "displayName": "Stop_stops_data",
+  "operationType": "Mapping",
+  "entityTypeId": "6569770680208",
+  "mappingOperationProperties": {
+    "MappingType": "NonTimeSeries",
+    "MappedProperties": [
+      {
+        "SourceColumn": "Stop_Name",
+        "EntityTypePropertyName": "DisplayName"
+      },
+      {
+        "SourceColumn": "Stop_Code",
+        "EntityTypePropertyName": "Stop_Code"
+      },
+      {
+        "SourceColumn": "Road_Name",
+        "EntityTypePropertyName": "Road_Name"
+      },
+      {
+        "SourceColumn": "Borough",
+        "EntityTypePropertyName": "Borough"
+      },
+      {
+        "SourceColumn": "Borough_ID",
+        "EntityTypePropertyName": "Borough_ID"
+      },
+      {
+        "SourceColumn": "Suggested_Locality",
+        "EntityTypePropertyName": "Suggested_Locality"
+      },
+      {
+        "SourceColumn": "Locality_ID",
+        "EntityTypePropertyName": "Locality_ID"
+      },
+      {
+        "SourceColumn": "Latitude",
+        "EntityTypePropertyName": "Latitude"
+      },
+      {
+        "SourceColumn": "Longitude",
+        "EntityTypePropertyName": "Longitude"
+      }
+    ],
+    "ProcessingType": "Iterative",
+    "EntityInstanceIdSchema": [
+      "Stop_Code"
+    ],
+    "TimeseriesEntityLinkProperties": null
+  },
+  "sourceTableProperties": {
+    "SourceType": "LakehouseTables",
+    "WorkspaceId": "00000000-0000-0000-0000-000000000000",
+    "ItemId": "d3ec503b-861b-ad2a-4b4b-004b31446b0e",
+    "SourceTableName": "stops_data",
+    "SourceSchema": "dbo"
+  },
+  "filters": null
+}

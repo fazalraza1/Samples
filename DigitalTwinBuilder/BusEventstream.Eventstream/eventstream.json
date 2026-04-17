@@ -1,0 +1,230 @@
+{
+  "sources": [
+    {
+      "id": "7d0029f5-8707-4be1-9b36-7b5e468a1e2d",
+      "name": "Buses",
+      "type": "SampleData",
+      "properties": {
+        "type": "Buses"
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "id": "4efc8df7-c0dd-4817-be33-67e07a19acc2",
+      "name": "TutorialDestination",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "ProcessedIngestion",
+        "workspaceId": "00000000-0000-0000-0000-000000000000",
+        "itemId": "3bad450a-576a-a330-4916-4c78717eebba",
+        "databaseName": "Tutorial",
+        "tableName": "bus_data_raw",
+        "inputSerialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        }
+      },
+      "inputNodes": [
+        {
+          "name": "ManageFields"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "ManageFields",
+          "schema": {
+            "columns": [
+              {
+                "name": "ActualTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "TripId",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "BusLine",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "StationNumber",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "ScheduleTime",
+                "type": "DateTime",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "Properties",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "streams": [
+    {
+      "id": "1a5c3eb8-78e9-4a9e-937b-03817c179512",
+      "name": "BusEventstream-stream",
+      "type": "DefaultStream",
+      "properties": {},
+      "inputNodes": [
+        {
+          "name": "Buses"
+        }
+      ]
+    }
+  ],
+  "operators": [
+    {
+      "name": "ManageFields",
+      "type": "ManageFields",
+      "inputNodes": [
+        {
+          "name": "BusEventstream-stream"
+        }
+      ],
+      "properties": {
+        "columns": [
+          {
+            "type": "Cast",
+            "properties": {
+              "targetDataType": "DateTime",
+              "column": {
+                "expressionType": "ColumnReference",
+                "node": null,
+                "columnName": "Timestamp",
+                "columnPathSegments": []
+              }
+            },
+            "alias": "ActualTime"
+          },
+          {
+            "type": "Rename",
+            "properties": {
+              "column": {
+                "expressionType": "ColumnReference",
+                "node": null,
+                "columnName": "TripId",
+                "columnPathSegments": []
+              }
+            },
+            "alias": "TripId"
+          },
+          {
+            "type": "Rename",
+            "properties": {
+              "column": {
+                "expressionType": "ColumnReference",
+                "node": null,
+                "columnName": "BusLine",
+                "columnPathSegments": []
+              }
+            },
+            "alias": "BusLine"
+          },
+          {
+            "type": "Rename",
+            "properties": {
+              "column": {
+                "expressionType": "ColumnReference",
+                "node": null,
+                "columnName": "StationNumber",
+                "columnPathSegments": []
+              }
+            },
+            "alias": "StationNumber"
+          },
+          {
+            "type": "Cast",
+            "properties": {
+              "targetDataType": "DateTime",
+              "column": {
+                "expressionType": "ColumnReference",
+                "node": null,
+                "columnName": "ScheduleTime",
+                "columnPathSegments": []
+              }
+            },
+            "alias": "ScheduleTime"
+          },
+          {
+            "type": "Rename",
+            "properties": {
+              "column": {
+                "expressionType": "ColumnReference",
+                "node": null,
+                "columnName": "Properties",
+                "columnPathSegments": []
+              }
+            },
+            "alias": "Properties"
+          }
+        ]
+      },
+      "inputSchemas": [
+        {
+          "name": "BusEventstream-stream",
+          "schema": {
+            "columns": [
+              {
+                "name": "Timestamp",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "TripId",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "BusLine",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "StationNumber",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "ScheduleTime",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "Properties",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "compatibilityLevel": "1.1"
+}

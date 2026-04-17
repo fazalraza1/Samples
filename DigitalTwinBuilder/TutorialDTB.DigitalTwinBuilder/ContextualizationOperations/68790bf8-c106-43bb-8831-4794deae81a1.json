@@ -1,0 +1,16 @@
+{
+  "OperationId": "68790bf8-c106-43bb-8831-4794deae81a1",
+  "DisplayName": "Bus_goesTo_Stop_Contextualization",
+  "OperationType": "Contextualization",
+  "EntityTypeRelationshipId": "5905199834831178752",
+  "JoinColumns": {
+    "FirstColumn": {
+      "EntityId": "71847788410341",
+      "AttributeName": "StopCode_static"
+    },
+    "SecondColumn": {
+      "EntityId": "6569770680208",
+      "AttributeName": "Stop_Code"
+    }
+  }
+}

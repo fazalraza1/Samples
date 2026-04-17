@@ -1,0 +1,108 @@
+// KQL script
+// Use management commands in this script to configure your database items, such as tables, functions, materialized views, and more.
+
+
+.create-merge table bus_data_raw (ActualTime:datetime, TripId:string, BusLine:long, StationNumber:long, ScheduleTime:datetime, Properties:string) 
+.create-merge table bus_data_processed (ActualTime:datetime, TripId:string, BusLine:long, StationNumber:long, ScheduleTime:datetime, BusState:string, TimeToNextStation:string, StopCode:int) 
+.create-or-alter function with (skipvalidation = "true") extractBusData() {
+    bus_data_raw
+    | extend BusState = tostring(todynamic(Properties).BusState)
+        , TimeToNextStation = tostring(todynamic(Properties).TimeToNextStation)
+        , StopCode = toint(10000 + abs(((toint(BusLine) * 100) + toint(StationNumber)) % 750))
+    | project-away Properties
+}
+.create-or-alter function with (skipvalidation = "true") Bus_property() {
+        let entity_property = (
+            external_table("propertydescriptor")
+            | where EntityTypeId == '71847788410341'
+            | project PropertyDescriptorId = Id, Name, ValueTypeId
+            | join kind=leftouter (
+                (external_table("stringpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, StringValue = Value)
+                | union (external_table("boolpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, BoolValue = Value)
+                | union (external_table("bigintpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, BigIntValue = Value)
+                | union (external_table("doublepropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, DoubleValue = Value)
+                | union (external_table("floatpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, FloatValue = Value)
+                | union (external_table("datetimepropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, DateTimeValue = Value)
+            ) on PropertyDescriptorId
+            | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, Name, StringValue, BoolValue, BigIntValue, DoubleValue, FloatValue, DateTimeValue
+            | where isnotnull(EntityInstanceId1) and isnotnull(EntityInstanceId2)
+            | summarize
+                EntityInstanceUID = minif(StringValue, Name == "EntityInstanceUID"),DisplayName = minif(StringValue, Name == "DisplayName"),TripId_static = minif(StringValue, Name == "TripId_static"),StopCode_static = minif(BigIntValue, Name == "StopCode_static") by EntityInstanceId1, EntityInstanceId2 
+        );
+        entity_property
+        }
+.create-or-alter function with (skipvalidation = "true") Bus_timeseries() {
+        let Timeseries_property = (
+            external_table("timeseriespropertydescriptor")
+            | where EntityTypeId == '71847788410341'
+            | project TimeseriesPropertyDescriptorId = Id, Name, ValueTypeId
+            | join kind=inner (
+                external_table("timeseriesinstancedescriptor")
+                | project Id1, Id2, EntityInstanceId1, EntityInstanceId2, TimeseriesPropertyDescriptorId
+            ) on $left.TimeseriesPropertyDescriptorId == $right.TimeseriesPropertyDescriptorId
+            | join kind=leftouter (
+                (external_table("stringtimeseriesvalue")
+                | project TimeseriesInstanceDescriptorId1, TimeseriesInstanceDescriptorId2, PreciseTimestamp, StringValue = Value)
+                | union (external_table("booltimeseriesvalue")
+                | project TimeseriesInstanceDescriptorId1, TimeseriesInstanceDescriptorId2, PreciseTimestamp, BoolValue = Value)
+                | union (external_table("biginttimeseriesvalue")
+                | project TimeseriesInstanceDescriptorId1, TimeseriesInstanceDescriptorId2, PreciseTimestamp, BigIntValue = Value)
+                | union (external_table("floattimeseriesvalue")
+                | project TimeseriesInstanceDescriptorId1, TimeseriesInstanceDescriptorId2, PreciseTimestamp, FloatValue = Value)
+                | union (external_table("doubletimeseriesvalue")
+                | project TimeseriesInstanceDescriptorId1, TimeseriesInstanceDescriptorId2, PreciseTimestamp, DoubleValue = Value)
+                | union (external_table("datetimetimeseriesvalue")
+                | project TimeseriesInstanceDescriptorId1, TimeseriesInstanceDescriptorId2, PreciseTimestamp, DateTimeValue = Value)
+            ) on $left.Id1 == $right.TimeseriesInstanceDescriptorId1 and $left.Id2 == $right.TimeseriesInstanceDescriptorId2
+            | project EntityInstanceId1, EntityInstanceId2, PreciseTimestamp, Name, StringValue, BoolValue, BigIntValue, DoubleValue, FloatValue, DateTimeValue
+            | where isnotnull(EntityInstanceId1) and isnotnull(EntityInstanceId2)
+            | summarize
+                EntityInstanceUID = minif(StringValue, Name == "EntityInstanceUID"),ScheduleTime = minif(DateTimeValue, Name == "ScheduleTime"),BusLine = minif(BigIntValue, Name == "BusLine"),StationNumber = minif(BigIntValue, Name == "StationNumber"),StopCode = minif(BigIntValue, Name == "StopCode"),BusState = minif(StringValue, Name == "BusState"),TimeToNextStation = minif(StringValue, Name == "TimeToNextStation"),TripId = minif(StringValue, Name == "TripId") by EntityInstanceId1, EntityInstanceId2, PreciseTimestamp 
+        );
+        Timeseries_property
+        }
+.create-or-alter function with (skipvalidation = "true") Stop_property() {
+        let entity_property = (
+            external_table("propertydescriptor")
+            | where EntityTypeId == '6569770680208'
+            | project PropertyDescriptorId = Id, Name, ValueTypeId
+            | join kind=leftouter (
+                (external_table("stringpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, StringValue = Value)
+                | union (external_table("boolpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, BoolValue = Value)
+                | union (external_table("bigintpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, BigIntValue = Value)
+                | union (external_table("doublepropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, DoubleValue = Value)
+                | union (external_table("floatpropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, FloatValue = Value)
+                | union (external_table("datetimepropertyvalue")
+                | where isnull(ValidTo)
+                | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, DateTimeValue = Value)
+            ) on PropertyDescriptorId
+            | project EntityInstanceId1, EntityInstanceId2, PropertyDescriptorId, Name, StringValue, BoolValue, BigIntValue, DoubleValue, FloatValue, DateTimeValue
+            | where isnotnull(EntityInstanceId1) and isnotnull(EntityInstanceId2)
+            | summarize
+                EntityInstanceUID = minif(StringValue, Name == "EntityInstanceUID"),DisplayName = minif(StringValue, Name == "DisplayName"),Stop_Code = minif(BigIntValue, Name == "Stop_Code"),Road_Name = minif(StringValue, Name == "Road_Name"),Borough = minif(StringValue, Name == "Borough"),Borough_ID = minif(BigIntValue, Name == "Borough_ID"),Suggested_Locality = minif(StringValue, Name == "Suggested_Locality"),Locality_ID = minif(BigIntValue, Name == "Locality_ID"),Latitude = minif(DoubleValue, Name == "Latitude"),Longitude = minif(DoubleValue, Name == "Longitude") by EntityInstanceId1, EntityInstanceId2 
+        );
+        entity_property
+        }
+.alter table bus_data_processed policy update "[{\"IsEnabled\":true,\"Source\":\"bus_data_raw\",\"Query\":\"extractBusData\",\"IsTransactional\":false,\"PropagateIngestionProperties\":true,\"ManagedIdentity\":null}]"

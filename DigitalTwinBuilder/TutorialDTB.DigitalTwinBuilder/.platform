@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DigitalTwinBuilder",
+    "displayName": "TutorialDTB"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4b12c1cb-6127-bc21-4c97-f23e69784208"
+  }
+}

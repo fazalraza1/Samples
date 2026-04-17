@@ -1,0 +1,64 @@
+{
+  "Id": "6569770680208",
+  "Namespace": "usertypes",
+  "BaseEntityTypeId": "1",
+  "Name": "Stop",
+  "IsLocked": false,
+  "Properties": [
+    {
+      "Id": "430556491298111488",
+      "Name": "DisplayName",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111489",
+      "Name": "Stop_Code",
+      "ValueType": "BigInt",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111490",
+      "Name": "Road_Name",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111491",
+      "Name": "Borough",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111492",
+      "Name": "Borough_ID",
+      "ValueType": "BigInt",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111493",
+      "Name": "Suggested_Locality",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111494",
+      "Name": "Locality_ID",
+      "ValueType": "BigInt",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111495",
+      "Name": "Latitude",
+      "ValueType": "Double",
+      "IsLocked": false
+    },
+    {
+      "Id": "430556491298111496",
+      "Name": "Longitude",
+      "ValueType": "Double",
+      "IsLocked": false
+    }
+  ],
+  "TimeseriesProperties": []
+}

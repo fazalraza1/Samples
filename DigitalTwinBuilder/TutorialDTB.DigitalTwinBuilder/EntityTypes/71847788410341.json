@@ -1,0 +1,77 @@
+{
+  "Id": "71847788410341",
+  "Namespace": "usertypes",
+  "BaseEntityTypeId": "1",
+  "Name": "Bus",
+  "IsLocked": false,
+  "Properties": [
+    {
+      "Id": "4708616661260107776",
+      "Name": "DisplayName",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107777",
+      "Name": "TripId_static",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107778",
+      "Name": "StopCode_static",
+      "ValueType": "BigInt",
+      "IsLocked": false
+    }
+  ],
+  "TimeseriesProperties": [
+    {
+      "Id": "4708616661260107776",
+      "Name": "Timestamp",
+      "ValueType": "DateTime",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107777",
+      "Name": "ScheduleTime",
+      "ValueType": "DateTime",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107778",
+      "Name": "BusLine",
+      "ValueType": "BigInt",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107779",
+      "Name": "StationNumber",
+      "ValueType": "BigInt",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107780",
+      "Name": "StopCode",
+      "ValueType": "BigInt",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107781",
+      "Name": "BusState",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107782",
+      "Name": "TimeToNextStation",
+      "ValueType": "String",
+      "IsLocked": false
+    },
+    {
+      "Id": "4708616661260107783",
+      "Name": "TripId",
+      "ValueType": "String",
+      "IsLocked": false
+    }
+  ]
+}

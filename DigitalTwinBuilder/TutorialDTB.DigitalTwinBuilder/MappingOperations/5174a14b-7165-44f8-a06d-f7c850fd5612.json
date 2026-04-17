@@ -1,0 +1,57 @@
+{
+  "operationId": "5174a14b-7165-44f8-a06d-f7c850fd5612",
+  "displayName": "Bus_bus_data_processed_TimeSeries",
+  "operationType": "Mapping",
+  "entityTypeId": "71847788410341",
+  "mappingOperationProperties": {
+    "MappingType": "TimeSeries",
+    "MappedProperties": [
+      {
+        "SourceColumn": "ActualTime",
+        "EntityTypePropertyName": "Timestamp"
+      },
+      {
+        "SourceColumn": "ScheduleTime",
+        "EntityTypePropertyName": "ScheduleTime"
+      },
+      {
+        "SourceColumn": "BusLine",
+        "EntityTypePropertyName": "BusLine"
+      },
+      {
+        "SourceColumn": "StationNumber",
+        "EntityTypePropertyName": "StationNumber"
+      },
+      {
+        "SourceColumn": "StopCode",
+        "EntityTypePropertyName": "StopCode"
+      },
+      {
+        "SourceColumn": "BusState",
+        "EntityTypePropertyName": "BusState"
+      },
+      {
+        "SourceColumn": "TimeToNextStation",
+        "EntityTypePropertyName": "TimeToNextStation"
+      },
+      {
+        "SourceColumn": "TripId",
+        "EntityTypePropertyName": "TripId"
+      }
+    ],
+    "ProcessingType": "Incremental",
+    "EntityInstanceIdSchema": [],
+    "TimeseriesEntityLinkProperties": {
+      "EntityProperty": "TripId_static",
+      "TimeseriesProperty": "TripId"
+    }
+  },
+  "sourceTableProperties": {
+    "SourceType": "LakehouseTables",
+    "WorkspaceId": "00000000-0000-0000-0000-000000000000",
+    "ItemId": "d3ec503b-861b-ad2a-4b4b-004b31446b0e",
+    "SourceTableName": "bus_data_processed",
+    "SourceSchema": "dbo"
+  },
+  "filters": null
+}
