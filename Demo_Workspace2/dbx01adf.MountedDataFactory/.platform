@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "MountedDataFactory",
+    "displayName": "dbx01adf"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e2c3aca1-814b-a2fb-4b40-a1c09d25edad"
+  }
+}

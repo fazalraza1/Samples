@@ -47,7 +47,7 @@ shared #"Transform file" = (Parameter as binary) => let
 in
   #"Promoted headers";
 shared #"Sample file_DataDestination" = let
-  Pattern = Lakehouse.Contents([HierarchicalNavigation = null, CreateNavigationProperties = false, EnableFolding = false]),
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = null, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "2c14bfb4-7a6e-418c-9006-b565c36cc0ae"]}[Data],
   Navigation_2 = Navigation_1{[lakehouseId = "4f5f817d-3ad7-4b39-8828-0ed8e47baf0a"]}[Data],
   TableNavigation = Navigation_2{[Id = "SilverTable", ItemKind = "Table"]}?[Data]?

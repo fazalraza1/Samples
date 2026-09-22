@@ -18,6 +18,7 @@
           "secureOutput": false
         },
         "name": "Sales_Copy job1",
+        "description": "Copies sales data from a source to a destination. This is the initial data movement activity in the pipeline.",
         "dependsOn": []
       },
       {
@@ -36,6 +37,7 @@
           "secureOutput": false
         },
         "name": "Transform_SalesData",
+        "description": "Runs a dataflow named 'Transform_SalesData' in the 'Demo_Workspace2' workspace. This activity depends on the successful completion of 'Sales_Copy job1' and performs data transformation on the copied sales data.",
         "dependsOn": [
           {
             "activity": "Sales_Copy job1",
@@ -59,6 +61,7 @@
           "secureOutput": false
         },
         "name": "Notebook1",
+        "description": "Executes a notebook named 'Transform_SalesData' in the 'Demo_Workspace2' workspace. This activity depends on the successful completion of the 'Transform_SalesData' dataflow and likely performs additional data processing or analysis.",
         "dependsOn": [
           {
             "activity": "Transform_SalesData",
@@ -82,6 +85,7 @@
           "secureOutput": false
         },
         "name": "Notebook2",
+        "description": "Executes a notebook named 'Add_Dimension' in the 'Demo_Workspace2' workspace. This activity depends on the successful completion of 'Notebook1' and likely adds dimensional data or enriches the dataset.",
         "dependsOn": [
           {
             "activity": "Notebook1",
@@ -107,7 +111,7 @@
           "secureOutput": false
         },
         "name": "Name Split",
-        "description": "Remove Duplicates and Split first and last name",
+        "description": "Runs a dataflow named 'Split Name' in the 'Demo_Workspace2' workspace. This activity depends on the successful completion of 'Notebook2' and likely splits or parses name fields in the data.",
         "dependsOn": [
           {
             "activity": "Notebook2",
@@ -135,6 +139,7 @@
           "secureOutput": false
         },
         "name": "Office365Email1",
+        "description": "Sends an Office 365 email notification. This activity depends on the successful completion of both 'Sales_Copy job1' and 'Notebook1', and is likely used to notify stakeholders about the pipeline's progress or results.",
         "dependsOn": [
           {
             "activity": "Sales_Copy job1",
