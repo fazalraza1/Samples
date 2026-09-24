@@ -29,6 +29,22 @@
 # META   }
 # META }
 
+# MARKDOWN ********************
+
+# # Notebook Summary – Add_Dimension
+# 
+# This notebook builds **gold-layer dimension tables** from an existing silver table:
+# 
+# 1. **Load source data** from the `SilverTable` into a Spark DataFrame.
+# 2. **Create `dimdate_gold` Delta table** with date-related attributes (`OrderDate`, day, month, year, `mmmyyyy`, `yyyymm`).
+# 3. **Derive the Date dimension DataFrame** (`dfdimDate_gold`) by de-duplicating `OrderDate` and adding calendar attributes.
+# 4. **Upsert into `dimdate_gold`** using a Delta Lake `MERGE` to insert new dates and prepare for updates.
+# 5. **Create `dimcustomer_gold` Delta table** to hold curated customer attributes (`CustomerName`, `Email`, `First`, `Last`, `CustomerID`).
+# 6. A note indicates that **customer cleansing and name-splitting** logic (drop duplicates, split `CustomerName` into `First` and `Last`) is handled in **Dataflow Gen2**, not in this notebook.
+# 
+# Use this notebook as the final transformation step to materialize **gold-layer dimensions** ready for reporting and analytics.
+
+
 # CELL ********************
 
 # Load data to the dataframe as a starting point to create the gold layer

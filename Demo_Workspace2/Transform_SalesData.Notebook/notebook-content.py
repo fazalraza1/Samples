@@ -20,6 +20,39 @@
 # META   }
 # META }
 
+# MARKDOWN ********************
+
+# # Transform_SalesData – Notebook Overview
+# 
+# This notebook prepares and maintains a Delta **Silver** layer table named `SilverTable` in the lakehouse.
+# 
+# ## High-level steps
+# 1. **Inspect current Silver table**  
+#    Reads from the Delta table `SilverTable` and displays a sample of rows.
+# 
+# 2. **(Re)create `SilverTable` as Delta with schema overwrite**  
+#    Ensures the `SilverTable` exists as a Delta table and overwrites its data/schema when needed.
+# 
+# 3. **Apply business transformations**  
+#    - Reads the latest data from `SilverTable`.
+#    - Adds derived columns:
+#      - `IsFlagged`: `true` when `OrderDate` is earlier than `2019-08-01`, else `false`.
+#      - `CreatedTS` and `ModifiedTS`: current timestamp.
+#    - Cleans `CustomerName`, setting it to `"Unknown"` when null or empty.
+#    - Overwrites `SilverTable` with the transformed data.
+# 
+# 4. **Define table schema (idempotent)**  
+#    Uses Delta Lake DDL to **create the `SilverTable` if it does not exist** with the desired schema, including business and metadata columns such as `IsFlagged`, `CreatedTS`, and `ModifiedTS`.
+# 
+# 5. **Upsert (merge) updates into `SilverTable`**  
+#    - Treats the DataFrame `df` as the source of updates.
+#    - Matches existing rows on `SalesOrderNumber`, `OrderDate`, `CustomerName`, and `Item`.
+#    - **When matched:** updates quantities, prices, taxes, flags, and `ModifiedTS`.
+#    - **When not matched:** inserts new rows with all fields including `CreatedTS` and `ModifiedTS`.
+# 
+# > Tip: Run the cells in order from top to bottom so that the schema definition and DataFrame `df` used in the merge are correctly initialized before the merge cell executes.
+
+
 # CELL ********************
 
 from pyspark.sql.types import *
